@@ -2,6 +2,23 @@ import yaml
 import sys
 import random
 import math
+import os
+import argparse
+import palmConfig as pc
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Parse command line arguments for testing.")
+    
+    # add -fName param
+    parser.add_argument("-fName", type = str, help="File name to be processed", required=False, default = 'palmTestGen.yml')
+    # add -gpu param
+    parser.add_argument("-gpu", type = int, help = 'GPU ID to be used', required=False, default=-1)
+
+    args = parser.parse_args()
+    return args
+
+# Use cpu/gpu
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 def formatTemp(temp):
     return eval(f"f'{temp}'")
@@ -68,3 +85,8 @@ for ii in range(cnt):
     exec(xGen)
     exec(yGen)
     print(formatTemp(xVar))
+
+## ------------Test for library----------------
+
+# Test VecMax Function
+print("Testing VecMax:")
