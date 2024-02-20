@@ -1,0 +1,16 @@
+PalmTestGen:
+  RowCount: 5
+  xDim:
+    x1:
+      min: 1
+      max: 100
+      step: 1
+    x2:
+      min: 10
+      max: 50
+      step: 5
+  yDim:
+    y1:
+      formula: "x1 * 2"
+    y2:
+      formula: "x2 + 10"
