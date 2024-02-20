@@ -1,6 +1,8 @@
 import sys
 from enum import Enum
 import numpy as np
+import time
+import math
 
 class InfoLevel(Enum):
     TRACE = 0
@@ -95,12 +97,12 @@ def VectorMul(vv1, vv2):
 
 def Normalize(vv, iMin, iMax):
     sc = iMax - iMin
-    Assert(PosiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
+    Assert(PositiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
     return [(vv[ii] - iMin)/sc for ii in range(len(vv))]
 
 def Denormalize(vv, iMin, iMax):
     sc = iMax - iMin
-    Assert(PosiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
+    Assert(PositiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
     return [vv[ii] * sc + iMin for ii in range(len(vv))]
 
 def VectorSum(vv):
@@ -130,17 +132,17 @@ def VectorManhattanD(vv1, vv2):
     return VectorSum([abs(vv) for vv in VectorSub(vv1, vv2)])
 
 # cosin similarity
-def VectorCosins(vv1, vv2, vv1):
+def VectorCosins(vv1, vv2):
     return VectorDotMul(vv1, vv2)/VectorABS(vv1)/VectorABS(vv2)
 
 def NormalVector(wm, bb):
-    # linear equations defined by vm * X = bb
+    # linear equations defined by wm * X = bb
     # return X to satisfy all the linear equations.
     rtnV = None
     try:
         rtnV = np.linalg.solve(wm, bb)
-    except LinAlgError:
-        Print(InfoLevel.ERROR, f"NormalVector({vm}, DET(vm) == 0)")
+    except np.linalg.LinAlgError:
+        print("Error: Singular matrix encountered, determinant of wm is 0.")
     return rtnV
 
 def Point2PlaneDistance(pt, nv, bb):
@@ -181,7 +183,7 @@ def LUDecomp(mat):
     return LUL, LUU
 
 def MatrixReduce(mat, rowName, colName):
-    return mat, rowHame, ColName
+    return mat, rowName, colName
 
 def MatrixMergeRow(mat, rowName, colName, mergeIdxList):
     return mat, rowName, colName
@@ -189,3 +191,6 @@ def MatrixMergeRow(mat, rowName, colName, mergeIdxList):
 def PrintMatrix(mat):
     for vv in mat:
         print(vv)
+    return
+
+

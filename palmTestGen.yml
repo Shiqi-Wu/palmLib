@@ -1,6 +1,6 @@
 PalmTestGen:
-  RowCount: 5
-  xDim:
+  RowCount: 10
+  xDim: 
     x1:
       min: 1
       max: 100
@@ -9,7 +9,7 @@ PalmTestGen:
       min: 10
       max: 50
       step: 5
-  yDim:
+  yDim: 
     y1:
       formula: "x1 * 2"
     y2:
