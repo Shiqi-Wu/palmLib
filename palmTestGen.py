@@ -5,17 +5,27 @@ import math
 import os
 import argparse
 import palmConfig as pc
+import datetime
+import json
+import os
+import time
 
-def parse_arguments():
+def get_args_parser():
     parser = argparse.ArgumentParser(description="Parse command line arguments for testing.")
     
     # add -fName param
-    parser.add_argument("-fName", type = str, help="File name to be processed", required=False, default = 'palmTestGen.yml')
+    parser.add_argument("--fName", type = str, help="File name to be processed", required=False, default = 'palmTestGen.yml')
     # add -gpu param
-    parser.add_argument("-gpu", type = int, help = 'GPU ID to be used', required=False, default=-1)
+    parser.add_argument("--gpu", type = str, help = 'GPU ID to be used', required=False, default = "-1")
 
     args = parser.parse_args()
     return args
+
+def main(args):
+
+if __name__ == '__main__':
+    args = get_args_parser()
+    args = args.parse_args()
 
 # Use cpu/gpu
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
