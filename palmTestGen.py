@@ -402,9 +402,9 @@ def test_pc_vs_pcg(x_vec_list, y_vec_list, wm_vec_list):
         # print(len(wm_vec))
         # print(len(wm_vec[0]))
         # print(wm_vec[0][0])
-        pc_result = pc.LUDecomp(wm_vec)
-        pcg_result = pcg.LUDecomp(wm_vec)
-        assert np.allclose(pc_result, pcg_result), f"LUDecomp({wm_vec}) = {pc_result} != {pcg_result}"
+        pc_lul, pc_luu = pc.LUDecomp(wm_vec)
+        pcg_lul, pcg_luu = pcg.LUDecomp(wm_vec)
+        assert np.allclose(pc_lul, pcg_lul.tolist()) and np.allclose(pc_luu, pcg_luu.tolist()), f"LUDecomp({wm_vec}) = {pc_result} != {pcg_result}"
     print('LUDecomp pass!')
 
     print("All functions tested successfully!")

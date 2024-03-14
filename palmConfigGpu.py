@@ -158,9 +158,10 @@ def Point2PlaneDistance(pt, nv, bb):
 
 def LUDecomp(mat):
     rnk = len(mat)
+    mat = cp.array(mat)
 
-    LUL = [[0 for ii in range(rnk)] for ii in range(rnk)]
-    LUU = [[0 for ii in range(rnk)] for ii in range(rnk)]
+    LUL = cp.zeros((rnk, rnk))
+    LUU = cp.zeros((rnk, rnk))
 
     for ii in range(rnk):
         for kk in range(ii, rnk):
