@@ -21,16 +21,16 @@ def AssertWarn(cnd, msg):
     return cnd
 
 def VecMax(aVec, bVec):
-    AssertWarn(len(aVec) == len(bVec), "palmConfig.VecMax()")
-        
-    lenMin = min(len(aVec), len(bVec))
-    return [max(aVec[ii], bVec[ii]) for ii in range(lenMin)]
+    aVec = cp.array(aVec)
+    bVec = cp.array(bVec)
+    AssertWarn(aVec.shape == bVec.shape, "palmConfig.VecMax()")
+    return cp.maximum(aVec, bVec)
 
 def VecMin(aVec, bVec):
-    AssertWarn(len(aVec) == len(bVec), "palmConfig.VecMax()")
-        
-    lenMin = min(len(aVec), len(bVec))
-    return [min(aVec[ii], bVec[ii]) for ii in range(lenMin)]
+    aVec = cp.array(aVec)
+    bVec = cp.array(bVec)
+    AssertWarn(aVec.shape == bVec.shape, "palmConfig.VecMin()")
+    return cp.minimum(aVec, bVec)
 
 def Print(iLevel, str):
     if iLevel.value >= RunningLevel.value:
@@ -49,33 +49,29 @@ def PositiveNumber(nn):
     return nn >= Fmin
 
 def InSet(listX, xx):
-    for ii in listX:
-        if ii == xx:
-            return True
-    return False
+    listX = cp.array(listX)
+    return cp.any(listX == xx)
 
 def Contains(list1, list2):
-    for it in list2:
-        if not InSet(list1, it):
-            return False
-    return True
+    list1 = cp.array(list1)
+    list2 = cp.array(list2)
+    return cp.all(cp.isin(list2, list1))
 
-def VectorRange(vv, iMin = FMin, iMax = FMax):
-    return max(min(vv), iMin), min(max(vv), iMax)
+def VectorRange(vv, iMin=FMin, iMax=FMax):
+    vv = cp.array(vv)
+    return max(cp.min(vv), iMin), min(cp.max(vv), iMax)
 
 def VectorCmpAllGt(vv, sc):
-    for xx in vv:
-        if xx <= sc:
-            return False
-    return True
+    vv = cp.array(vv)
+    return cp.all(vv > sc)
 
 def VectorCmpAllLt(vv, sc):
-    for xx in vv:
-        if xx >= sc:
-            return False
-    return True
+    vv = cp.array(vv)
+    return cp.all(vv < sc)
 
 def VectorCmp(vv1, vv2):
+    vv1 = cp.array(vv1)
+    vv2 = cp.array(vv2)
     subV = VectorSub(vv1, vv2)
     if VectorCmpAllGt(subV, 0):
         return 1
@@ -84,52 +80,61 @@ def VectorCmp(vv1, vv2):
     return 0
 
 def VectorAdd(vv1, vv2):
-    mLen = min(len(vv1), len(vv2))
-    return [vv1[ii] + vv2[ii] for ii in range(mLen)] 
+    vv1 = cp.array(vv1)
+    vv2 = cp.array(vv2)
+    mLen = min(vv1.size, vv2.size)
+    return vv1[:mLen] + vv2[:mLen]
 
 def VectorSub(vv1, vv2):
-    mLen = min(len(vv1), len(vv2))
-    return [vv1[ii] - vv2[ii] for ii in range(mLen)] 
+    vv1 = cp.array(vv1)
+    vv2 = cp.array(vv2)
+    mLen = min(vv1.size, vv2.size)
+    return vv1[:mLen] - vv2[:mLen]
 
 def VectorMul(vv1, vv2):
-    mLen = min(len(vv1), len(vv2))
-    return [vv1[ii] * vv2[ii] for ii in range(mLen)] 
+    vv1, vv2 = cp.array(vv1), cp.array(vv2)
+    mLen = min(vv1.size, vv2.size)
+    return vv1[:mLen] * vv2[:mLen]
 
 def Normalize(vv, iMin, iMax):
+    vv = cp.array(vv)
     sc = iMax - iMin
-    Assert(PositiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
-    return [(vv[ii] - iMin)/sc for ii in range(len(vv))]
+    Assert(PositiveNumber(sc), "Invalid iMin/iMax")
+    return (vv - iMin) / sc
 
 def Denormalize(vv, iMin, iMax):
+    vv = cp.array(vv)
     sc = iMax - iMin
-    Assert(PositiveNumber(sc), f"palmConfig.Normalize, invalid iMin:{iMin}, iMax:{iMax}")
-    return [vv[ii] * sc + iMin for ii in range(len(vv))]
+    Assert(PositiveNumber(sc), "Invalid iMin/iMax")
+    return vv * sc + iMin
 
 def VectorSum(vv):
-    rtnV = 0
-    for nn in vv:
-        rtnV += nn
-    return rtnV
+    vv = cp.array(vv)
+    return cp.sum(vv)
 
 def VectorDotMul(vv1, vv2):
+    vv1, vv2 = cp.array(vv1), cp.array(vv2)
     return VectorSum(VectorMul(vv1, vv2))
 
 def VectorABS(vv):
-    # ABS stands absolute value as vector enclosed by bar '|'.
-    # It is the length of the vector
-    return math.sqrt(VectorDotMul(vv, vv))
+    vv = cp.array(vv)
+    return cp.sqrt(VectorDotMul(vv, vv))
 
 def VectorSMul(vv, scale=1.0):
-    return [xx*scale for xx in vv]
+    vv = cp.array(vv)
+    return vv * scale
 
 def VectorCoss(vv1, vv2, scale=1.0):
+    vv1, vv2 = cp.array(vv1), cp.array(vv2)
     return VectorDotMul(vv1, vv2) / scale
 
 def VectorEuclideanD(vv1, vv2):
+    vv1, vv2 = cp.array(vv1), cp.array(vv2)
     return VectorABS(VectorSub(vv1, vv2))
 
 def VectorManhattanD(vv1, vv2):
-    return VectorSum([abs(vv) for vv in VectorSub(vv1, vv2)])
+    vv1, vv2 = cp.array(vv1), cp.array(vv2)
+    return VectorSum(cp.abs(VectorSub(vv1, vv2)))
 
 # cosin similarity
 def VectorCosins(vv1, vv2):
@@ -138,6 +143,8 @@ def VectorCosins(vv1, vv2):
 def NormalVector(wm, bb):
     # linear equations defined by wm * X = bb
     # return X to satisfy all the linear equations.
+    wm = cp.array(wm)
+    bb = cp.array(bb)
     rtnV = None
     try:
         rtnV = cp.linalg.solve(wm, bb)

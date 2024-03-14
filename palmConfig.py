@@ -139,6 +139,8 @@ def VectorCosins(vv1, vv2):
 def NormalVector(wm, bb):
     # linear equations defined by wm * X = bb
     # return X to satisfy all the linear equations.
+    wm = np.array(wm)
+    bb = np.array(bb)
     rtnV = None
     try:
         rtnV = np.linalg.solve(wm, bb)
