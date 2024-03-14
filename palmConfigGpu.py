@@ -35,17 +35,18 @@ def VecMin(aVec, bVec):
 def Print(iLevel, str):
     if iLevel.value >= RunningLevel.value:
         print(str)
-    
-def SetRunningLevel(iLevel):
-    RunningLevel = iLevel
+
 
 RunningLevel = InfoLevel.TRACE
 FMax = sys.float_info.max
 FMin = - sys.float_info.max
 Fmin = sys.float_info.min
 
+def SetRunningLevel(iLevel):
+    RunningLevel = iLevel
+
 def PositiveNumber(nn):
-    nn >= Fmin
+    return nn >= Fmin
 
 def InSet(listX, xx):
     for ii in listX:
@@ -59,8 +60,8 @@ def Contains(list1, list2):
             return False
     return True
 
-def VectorRange(vv, iMin = FMax, iMax = FMin):
-    return min(min(vv), iMax), max(max(vv), iMax)
+def VectorRange(vv, iMin = FMin, iMax = FMax):
+    return max(min(vv), iMin), min(max(vv), iMax)
 
 def VectorCmpAllGt(vv, sc):
     for xx in vv:
